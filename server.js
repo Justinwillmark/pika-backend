@@ -23,23 +23,31 @@ app.post('/api/v1/admin/analytics/activity-status', async (req, res) => {
     }
 
     // --- IMPORTANT: Replace this placeholder with your actual database code ---
-    // This is where you'll query your database (e.g., PostgreSQL, MongoDB, etc.)
-    // Your query should look for transactions from the given 'phoneNumbers'
-    // that occurred on or before the 'endDate'.
+    // Your query should now return both the phone number and the latest transaction date.
+    // Example SQL:
+    // SELECT "phoneNumber", MAX("transactionDate") as "latestTransactionDate"
+    // FROM "transactions"
+    // WHERE "phoneNumber" IN (...) AND "transactionDate" <= ...
+    // GROUP BY "phoneNumber"
     
     console.log('Checking activity for:', phoneNumbers, 'until', endDate);
 
     // For demonstration, we'll simulate a database response.
     // Let's pretend the first user in the list has been reactivated.
-    const reactivatedPhones = phoneNumbers.length > 0 ? [phoneNumbers[0]] : [];
+    const reactivatedUsers = phoneNumbers.length > 0 
+      ? [{ 
+          phoneNumber: phoneNumbers[0], 
+          latestTransactionDate: new Date().toISOString() 
+        }] 
+      : [];
     
-    console.log('Simulated reactivated users:', reactivatedPhones);
+    console.log('Simulated reactivated users:', reactivatedUsers);
     // --- End of placeholder section ---
 
 
     // Send the result back as JSON
     res.json({
-      reactivated_users: reactivatedPhones
+      reactivated_users: reactivatedUsers
     });
 
   } catch (error) {
